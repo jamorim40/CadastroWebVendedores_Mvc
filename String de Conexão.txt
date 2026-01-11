@@ -1,0 +1,4 @@
+String de Conexão
+
+Projeto: CadastroWebVendedores_Mvc
+"Server=JulianoAmorim\\DBJULIANO;Database=CadastroWebVendedores_Mvc;User Id=MeuLoginApp;Password=MeuLoginApp01;TrustServerCertificate=True;"
