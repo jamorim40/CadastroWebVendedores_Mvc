@@ -1,4 +1,7 @@
-﻿public class Startup
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using CadastroWebVendedores_Mvc.Data;
+public class Startup
 {
     public Startup(IConfiguration configuration)
     {
@@ -11,6 +14,9 @@
     public void ConfigureServices(IServiceCollection services)
     {
         services.AddControllersWithViews();
+
+        services.AddDbContext<CadastroWebVendedores_MvcContext>(options =>
+                options.UseSqlServer(Configuration.GetConnectionString("CadastroWebVendedores_MvcContext")));
 
         // Exemplo:
         // services.AddDbContext<AppDbContext>(options =>
