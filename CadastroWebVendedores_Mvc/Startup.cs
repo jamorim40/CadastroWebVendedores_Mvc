@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using CadastroWebVendedores_Mvc.Data;
 using Microsoft.Identity.Client;
+using CadastroWebVendedores_Mvc.Services;
 public class Startup
 {
     public Startup(IConfiguration configuration)
@@ -25,6 +26,9 @@ public class Startup
 
         // Registro do serviço para popular dados
         services.AddScoped<ServicoPopularDados>();
+
+        // Registro do serviço de vendedor
+        services.AddScoped<ServicoVendedor>();
     }
 
     // Equivalente ao Configure do .NET Core 2.1
