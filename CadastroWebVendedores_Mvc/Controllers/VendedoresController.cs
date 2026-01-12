@@ -1,4 +1,5 @@
-﻿using CadastroWebVendedores_Mvc.Services;
+﻿using CadastroWebVendedores_Mvc.Models;
+using CadastroWebVendedores_Mvc.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CadastroWebVendedores_Mvc.Controllers
@@ -20,6 +21,25 @@ namespace CadastroWebVendedores_Mvc.Controllers
         {
             var listaVendedores = _servicoVendedor.FindAll(); // Chama o serviço para obter a lista de vendedores
             return View(listaVendedores);// Retorna a view com a lista de vendedores
+        }
+
+        //Criar acao "Criar" (GET)
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+        //Criar ação "Criar" (POST)
+        [HttpPost]// Indica que esta ação responde a requisições POST
+        [ValidateAntiForgeryToken]// Protege contra ataques CSRF
+        public IActionResult Create(Vendedor vendedor)
+        {
+            if (ModelState.IsValid)// Verifica se o modelo é válido
+            {
+                _servicoVendedor.Insert(vendedor);// Chama o serviço para inserir o novo vendedor
+                return RedirectToAction(nameof(Index));// Redireciona para a ação Index após a criação
+            }
+            return View(vendedor);
         }
     }
 }
