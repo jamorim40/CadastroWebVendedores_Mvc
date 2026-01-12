@@ -11,6 +11,9 @@
 
         //Associação entre Vendedor e Departamento (muitos para 1)
         public Departamento? Departamento { get; set; }
+        //Chave estrangeira para o Departamento
+        //Isso cria a coluna DepartamentoId na tabela Vendedor no banco de dados e garantia a integridade referencial
+        public int DepartamentoId { get; set; } 
 
         //Associação entre Vendedor e RegistroDeVendas (1 para muitos)
         public ICollection<RegistroDeVendas> Vendas { get; set; } = new List<RegistroDeVendas>();//Vendas é uma coleção de registros de vendas

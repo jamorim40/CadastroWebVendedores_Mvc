@@ -25,6 +25,7 @@ namespace CadastroWebVendedores_Mvc.Services
         //Será chamado pelo botao "Criar" na view (tela) Criar vendedor
         public void Insert (Vendedor obj)
         {
+            obj.Departamento = _context.Departamento.First();// Define um departamento padrão para o vendedor
             _context.Add(obj);// Adiciona o objeto ao contexto
             _context.SaveChanges();// Salva as alterações no banco de dados
         }
