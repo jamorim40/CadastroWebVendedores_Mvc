@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using CadastroWebVendedores_Mvc.Data;
+using Microsoft.Identity.Client;
 public class Startup
 {
     public Startup(IConfiguration configuration)
@@ -21,19 +22,50 @@ public class Startup
         // Exemplo:
         // services.AddDbContext<AppDbContext>(options =>
         //     options.UseSqlServer(Configuration.GetConnectionString("Default")));
+
+        // Registro do serviço para popular dados
+        services.AddScoped<ServicoPopularDados>();
     }
 
     // Equivalente ao Configure do .NET Core 2.1
+
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
-        if (env.IsDevelopment())
+        //Validar ambiente de desenvolvimento
+        if (env.IsDevelopment()) //Se estiver em desenvolvimento
         {
-            app.UseDeveloperExceptionPage();
+            app.UseDeveloperExceptionPage();//Mostra detalhes dos erros
         }
+        //Se não estiver em desenvolvimento
         else
         {
-            app.UseExceptionHandler("/Home/Error");
-            app.UseHsts();
+            app.UseExceptionHandler("/Home/Error");//Redireciona para a página de erro
+            app.UseHsts();//Usa o HSTS (HTTP Strict Transport Security)
+        }
+        app.UseHttpsRedirection();
+        app.UseStaticFiles();
+        app.UseRouting();
+        app.UseAuthorization();
+        app.UseEndpoints(endpoints =>
+        {
+            endpoints.MapControllerRoute(
+                name: "default",
+                pattern: "{controller=Home}/{action=Index}/{id?}");
+        });
+    }
+    public void Configure(IApplicationBuilder app, IWebHostEnvironment env,ServicoPopularDados servicoPopularDados )
+    {
+        //Validar ambiente de desenvolvimento
+        if (env.IsDevelopment()) //Se estiver em desenvolvimento
+        {
+            app.UseDeveloperExceptionPage();//Mostra detalhes dos erros
+            //servicoPopularDados.PopularDados();// Popula o banco de dados com dados iniciais
+        }
+        //Se não estiver em desenvolvimento
+        else
+        {
+            app.UseExceptionHandler("/Home/Error");//Redireciona para a página de erro
+            app.UseHsts();//Usa o HSTS (HTTP Strict Transport Security)
         }
 
         app.UseHttpsRedirection();
