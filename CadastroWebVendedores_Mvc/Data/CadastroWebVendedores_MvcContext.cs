@@ -14,6 +14,11 @@ namespace CadastroWebVendedores_Mvc.Data
         {
         }
 
-        public DbSet<CadastroWebVendedores_Mvc.Models.Departamento> Departamento { get; set; } = default!;
+
+        // Define entidades DbSet (propriedades para cada modelo)
+        public DbSet<Departamento> Departamento { get; set; } = default!;
+        public DbSet<Vendedor> Vendedor { get; set; } = default!;
+        public DbSet<RegistroDeVendas> RegistroDeVendas { get; set; } = default!;
+
     }
 }
