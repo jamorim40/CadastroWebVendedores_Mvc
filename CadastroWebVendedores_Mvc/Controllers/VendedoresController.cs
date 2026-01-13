@@ -51,5 +51,31 @@ namespace CadastroWebVendedores_Mvc.Controllers
             }
             return View(vendedor);
         }
+
+        //Ação Delete (GET)
+        public IActionResult Delete(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();// Retorna 404 se o id for nulo
+            }
+
+            var vendedor = _servicoVendedor.FindById(id.Value);
+            if (vendedor == null)
+            {
+                return NotFound();
+            }
+            
+            return View(vendedor);
+        }
+
+        //Ação Delete (POST)
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public IActionResult Delete(int id)
+        {
+            _servicoVendedor.Remove(id);
+            return RedirectToAction(nameof(Index));
+        }
     }
 }

@@ -28,5 +28,19 @@ namespace CadastroWebVendedores_Mvc.Services
             _context.Add(obj);// Adiciona o objeto ao contexto
             _context.SaveChanges();// Salva as alterações no banco de dados
         }
+
+        // Implementar operação FindById para retornar um vendedor pelo Id
+        public Vendedor FindById(int id)
+        {
+            return _context.Vendedor.FirstOrDefault(v => v.Id == id);
+        }
+
+        // Implementar operação Remove para remover um vendedor
+        public void Remove(int id)
+        {
+            var obj = _context.Vendedor.Find(id);
+            _context.Vendedor.Remove(obj);
+            _context.SaveChanges();
+        }
     }
 }
