@@ -3,6 +3,8 @@ using Microsoft.Extensions.DependencyInjection;
 using CadastroWebVendedores_Mvc.Data;
 using Microsoft.Identity.Client;
 using CadastroWebVendedores_Mvc.Services;
+using System.Globalization;
+using Microsoft.AspNetCore.Localization;
 public class Startup
 {
     public Startup(IConfiguration configuration)
@@ -38,6 +40,16 @@ public class Startup
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
+        //Definir cultura padrão como pt-BR
+        var ptBr = new CultureInfo("pt-BR");
+        var localizacaoOpcoes = new RequestLocalizationOptions
+        {
+            DefaultRequestCulture = new RequestCulture(ptBr),
+            SupportedCultures = new List<CultureInfo> { ptBr },
+            SupportedUICultures = new List<CultureInfo> { ptBr }
+        };
+        app.UseRequestLocalization(localizacaoOpcoes);
+
         //Validar ambiente de desenvolvimento
         if (env.IsDevelopment()) //Se estiver em desenvolvimento
         {

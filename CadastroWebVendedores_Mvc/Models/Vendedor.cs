@@ -1,12 +1,25 @@
-﻿namespace CadastroWebVendedores_Mvc.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace CadastroWebVendedores_Mvc.Models
 {
     public class Vendedor
     {
         //Atributos da classe Vendedor
         public int Id { get; set; }
         public required string Nome { get; set; }
+
+        //Email com link de acesso
+        [DataType(DataType.EmailAddress)]
         public required string Email { get; set; }
+
+        //Data de nascimento com formatação de data
+        [Display(Name = "Data de Nascimento")]
+        [DataType(DataType.Date)]
         public DateTime DataNascimento { get; set; }
+
+        //Salário base com formatação de moeda
+        [Display(Name = "Salário Base")]
+        [DataType(DataType.Currency)]
         public double SalarioBase { get; set; }
 
         //Associação entre Vendedor e Departamento (muitos para 1)
