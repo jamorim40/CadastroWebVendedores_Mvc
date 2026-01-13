@@ -5,14 +5,14 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CadastroWebVendedores_Mvc.Controllers
 {
-   
+
     public class VendedoresController : Controller
     {
         //Declarar dependência do serviço de vendedor
-       private readonly ServicoVendedor _servicoVendedor;
+        private readonly ServicoVendedor _servicoVendedor;
 
         //Declarar dependência do serviço de departamento
-        private readonly ServicoDepartamento _servicoDepartamento;  
+        private readonly ServicoDepartamento _servicoDepartamento;
 
         //Construtor para injeção de dependência
         public VendedoresController(ServicoVendedor servicoVendedor, ServicoDepartamento servicoDepartamento)// Recebe a dependência via injeção
@@ -65,7 +65,7 @@ namespace CadastroWebVendedores_Mvc.Controllers
             {
                 return NotFound();
             }
-            
+
             return View(vendedor);
         }
 
@@ -92,6 +92,49 @@ namespace CadastroWebVendedores_Mvc.Controllers
                 return NotFound();
             }
 
+            return View(vendedor);
+        }
+
+        //Ação Edit (GET)
+        public IActionResult Edit(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var vendedor = _servicoVendedor.FindById(id.Value);
+            if (vendedor == null)
+            {
+                return NotFound();
+            }
+            // Chama o serviço para obter a lista de departamentos
+            var departamentos = _servicoDepartamento.FindAll();
+            // Cria o formulario com a lista de departamentos e inicializa o vendedor requerido
+            var formulario = new FormularioVendedor { Vendedor = vendedor, Departamentos = departamentos };
+            return View(formulario);
+        }
+
+        //Ação Edit (POST)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Edit(int id, Vendedor vendedor)
+        {
+            if (id != vendedor.Id)
+            {
+                return NotFound();
+            }
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _servicoVendedor.Update(vendedor);
+                }
+                catch (KeyNotFoundException)
+                {
+                    return NotFound();
+                }
+                return RedirectToAction(nameof(Index));
+            }
             return View(vendedor);
         }
     }

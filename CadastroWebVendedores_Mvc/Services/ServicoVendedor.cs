@@ -1,5 +1,6 @@
 ﻿using CadastroWebVendedores_Mvc.Data;
 using CadastroWebVendedores_Mvc.Models;
+using CadastroWebVendedores_Mvc.Services.Exeptions;
 using Microsoft.EntityFrameworkCore;
 
 namespace CadastroWebVendedores_Mvc.Services
@@ -42,6 +43,24 @@ namespace CadastroWebVendedores_Mvc.Services
             var obj = _context.Vendedor.Find(id);
             _context.Vendedor.Remove(obj);
             _context.SaveChanges();
+        }
+
+        // Implementar operação Update para atualizar um vendedor
+        public void Update(Vendedor obj)
+        {
+            if (!_context.Vendedor.Any(v => v.Id == obj.Id))
+            {
+                throw new KeyNotFoundException("Id não encontrado");
+            }
+            try
+            {
+                _context.Update(obj);
+                _context.SaveChanges();
+            }
+            catch (DbUpdateConcurrencyException e)
+            {
+                throw new DB_ExcecoesDeConcorrencia(e.Message);
+            }
         }
     }
 }
