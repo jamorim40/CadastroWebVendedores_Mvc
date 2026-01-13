@@ -29,6 +29,9 @@ public class Startup
 
         // Registro do serviço de vendedor
         services.AddScoped<ServicoVendedor>();
+
+        // Registro do serviço de departamento
+        services.AddScoped<ServicoDepartamento>();
     }
 
     // Equivalente ao Configure do .NET Core 2.1

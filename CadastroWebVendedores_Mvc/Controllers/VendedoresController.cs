@@ -1,4 +1,5 @@
 ﻿using CadastroWebVendedores_Mvc.Models;
+using CadastroWebVendedores_Mvc.Models.ViewModels;
 using CadastroWebVendedores_Mvc.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,10 +11,14 @@ namespace CadastroWebVendedores_Mvc.Controllers
         //Declarar dependência do serviço de vendedor
        private readonly ServicoVendedor _servicoVendedor;
 
+        //Declarar dependência do serviço de departamento
+        private readonly ServicoDepartamento _servicoDepartamento;  
+
         //Construtor para injeção de dependência
-        public VendedoresController(ServicoVendedor servicoVendedor)// Recebe a dependência via injeção
+        public VendedoresController(ServicoVendedor servicoVendedor, ServicoDepartamento servicoDepartamento)// Recebe a dependência via injeção
         {
             _servicoVendedor = servicoVendedor;// Inicializa a dependência
+            _servicoDepartamento = servicoDepartamento;
         }
 
         //Ação Index para listar vendedores
@@ -26,7 +31,12 @@ namespace CadastroWebVendedores_Mvc.Controllers
         //Criar acao "Criar" (GET)
         public IActionResult Create()
         {
-            return View();
+            // Chama o serviço para obter a lista de departamentos
+            var departamentos = _servicoDepartamento.FindAll();
+            // Cria o formulario com a lista de departamentos e inicializa o vendedor requerido
+            var formulario = new FormularioVendedor { Departamentos = departamentos };
+
+            return View(formulario);
         }
 
         //Criar ação "Criar" (POST)
