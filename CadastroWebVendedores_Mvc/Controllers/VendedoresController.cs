@@ -1,7 +1,9 @@
 ﻿using CadastroWebVendedores_Mvc.Models;
 using CadastroWebVendedores_Mvc.Models.ViewModels;
 using CadastroWebVendedores_Mvc.Services;
+using CadastroWebVendedores_Mvc.Services.Exeptions;
 using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics;
 
 namespace CadastroWebVendedores_Mvc.Controllers
 {
@@ -57,13 +59,13 @@ namespace CadastroWebVendedores_Mvc.Controllers
         {
             if (id == null)
             {
-                return NotFound();// Retorna 404 se o id for nulo
+                return RedirectToAction(nameof(Error), new { message = "Id não existe" });// Retorna erro se o id for nulo
             }
 
             var vendedor = _servicoVendedor.FindById(id.Value);
             if (vendedor == null)
             {
-                return NotFound();
+                return RedirectToAction(nameof(Error), new { message = "Id não encontrado" });// Retorna erro se o vendedor não for encontrado 
             }
 
             return View(vendedor);
@@ -83,13 +85,13 @@ namespace CadastroWebVendedores_Mvc.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                return RedirectToAction(nameof(Error), new { message = "Id não existe" });
             }
 
             var vendedor = _servicoVendedor.FindById(id.Value);
             if (vendedor == null)
             {
-                return NotFound();
+                return RedirectToAction(nameof(Error), new { message = "Id não encontrado" });
             }
 
             return View(vendedor);
@@ -100,12 +102,12 @@ namespace CadastroWebVendedores_Mvc.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                return RedirectToAction(nameof(Error), new { message = "Id não existe" });
             }
             var vendedor = _servicoVendedor.FindById(id.Value);
             if (vendedor == null)
             {
-                return NotFound();
+                return RedirectToAction(nameof(Error), new { message = "Id não encontrado" });
             }
             // Chama o serviço para obter a lista de departamentos
             var departamentos = _servicoDepartamento.FindAll();
@@ -121,21 +123,37 @@ namespace CadastroWebVendedores_Mvc.Controllers
         {
             if (id != vendedor.Id)
             {
-                return NotFound();
+                return RedirectToAction(nameof(Error), new { message = "Id não corresponde" });
             }
             if (ModelState.IsValid)
             {
                 try
                 {
                     _servicoVendedor.Update(vendedor);
+                    return RedirectToAction(nameof(Index));
                 }
-                catch (KeyNotFoundException)
+                catch (KeyNotFoundException ex)
                 {
-                    return NotFound();
+                    return RedirectToAction(nameof(Error), new { message = ex.Message });
                 }
-                return RedirectToAction(nameof(Index));
+                catch(DB_ExcecoesDeConcorrencia ex)
+                {
+                    return RedirectToAction(nameof(Error), new { message = ex.Message });
+                }
+               
             }
             return View(vendedor);
+        }
+
+        //Ação Error
+        public IActionResult Error(string message)
+        {
+            var mensagemErro = new ErrorViewModel
+            {
+                RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier,
+                Message = message
+            };
+            return View(mensagemErro);
         }
     }
 }
