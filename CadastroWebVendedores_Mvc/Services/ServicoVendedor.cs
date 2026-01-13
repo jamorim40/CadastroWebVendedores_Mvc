@@ -1,5 +1,6 @@
 ﻿using CadastroWebVendedores_Mvc.Data;
 using CadastroWebVendedores_Mvc.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace CadastroWebVendedores_Mvc.Services
 {
@@ -32,7 +33,7 @@ namespace CadastroWebVendedores_Mvc.Services
         // Implementar operação FindById para retornar um vendedor pelo Id
         public Vendedor FindById(int id)
         {
-            return _context.Vendedor.FirstOrDefault(v => v.Id == id);
+            return _context.Vendedor.Include(dep => dep.Departamento).FirstOrDefault(v => v.Id == id);
         }
 
         // Implementar operação Remove para remover um vendedor

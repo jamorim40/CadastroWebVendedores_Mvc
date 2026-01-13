@@ -77,5 +77,22 @@ namespace CadastroWebVendedores_Mvc.Controllers
             _servicoVendedor.Remove(id);
             return RedirectToAction(nameof(Index));
         }
+
+        //Ação Details (GET)
+        public IActionResult Details(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var vendedor = _servicoVendedor.FindById(id.Value);
+            if (vendedor == null)
+            {
+                return NotFound();
+            }
+
+            return View(vendedor);
+        }
     }
 }
