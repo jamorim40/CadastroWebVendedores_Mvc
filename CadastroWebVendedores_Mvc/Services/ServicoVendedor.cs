@@ -18,35 +18,35 @@ namespace CadastroWebVendedores_Mvc.Services
         }
 
         // Implemantar operação FindAllAsync para retornar todos os vendedores
-        public List<Vendedor> FindAll() // Operação síncrona
+        public async Task<List<Vendedor>> FindAllAsync() // Operação assíncrona
         {
-            return  _context.Vendedor.ToList();// Retorna a lista de vendedores
+            return await _context.Vendedor.ToListAsync();// Retorna a lista de vendedores
         }
 
         //Inserir um novo vendedor no DB
         //Será chamado pelo botao "Criar" na view (tela) Criar vendedor
-        public void Insert (Vendedor obj)
+        public async Task InsertAsync(Vendedor obj)
         {
             _context.Add(obj);// Adiciona o objeto ao contexto
-            _context.SaveChanges();// Salva as alterações no banco de dados
+            await _context.SaveChangesAsync();// Salva as alterações no banco de dados
         }
 
         // Implementar operação FindById para retornar um vendedor pelo Id
-        public Vendedor FindById(int id)
+        public async Task<Vendedor> FindByIdAsync(int id)
         {
-            return _context.Vendedor.Include(dep => dep.Departamento).FirstOrDefault(v => v.Id == id);
+            return await _context.Vendedor.Include(dep => dep.Departamento).FirstOrDefaultAsync(v => v.Id == id);
         }
 
         // Implementar operação Remove para remover um vendedor
-        public void Remove(int id)
+        public async Task RemoveAsync(int id)
         {
-            var obj = _context.Vendedor.Find(id);
+            var obj = await _context.Vendedor.FindAsync(id);
             _context.Vendedor.Remove(obj);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
 
         // Implementar operação Update para atualizar um vendedor
-        public void Update(Vendedor obj)
+        public async Task UpdateAsync(Vendedor obj)
         {
             if (!_context.Vendedor.Any(v => v.Id == obj.Id))
             {
@@ -55,7 +55,7 @@ namespace CadastroWebVendedores_Mvc.Services
             try
             {
                 _context.Update(obj);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException e)
             {

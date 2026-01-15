@@ -1,5 +1,6 @@
 ﻿using CadastroWebVendedores_Mvc.Data;
 using CadastroWebVendedores_Mvc.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace CadastroWebVendedores_Mvc.Services
 {
@@ -15,9 +16,9 @@ namespace CadastroWebVendedores_Mvc.Services
         }
 
         // Retornar todos os departamentos
-        public List<Departamento> FindAll()
+        public async Task<List<Departamento>> FindAllAsync()
         {
-            return _context.Departamento.OrderBy(d => d.Nome).ToList();// Retorna a lista de departamentos ordenada por nome
+            return await _context.Departamento.OrderBy(d => d.Nome).ToListAsync();// Retorna a lista de departamentos ordenada por nome
         }
     }
 }

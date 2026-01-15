@@ -17,7 +17,8 @@
     <!-- "col-md" é a dimensão da tela e o "4" indica que oculpa 4 partes (bootstrap divide a tela em 12 partes) -->
     <div class="col-md-4">
         
-        <form asp-action="Create"> <!-- “Quando esse formulário for enviado, mande os dados para o método Create do Controller atual”-->
+        <form asp-action="Create" method="post"> <!-- “Quando esse formulário for enviado, mande os dados para o método Create do Controller atual”-->
+           <!-- <div asp-validation-summary="All" class="text-danger"></div> -->
             <div class="form-group">
                 <label asp-for="Vendedor.Nome" class="control-label"></label>
                 <input asp-for="Vendedor.Nome" class="form-control" />
@@ -41,8 +42,9 @@
             <div class="form-group">
                     <label asp-for="Vendedor.DepartamentoId" class="control-label"></label>
                     <select asp-for="Vendedor.DepartamentoId" 
-                            asp-items="@(new SelectList(Model.Departamentos, "Id", "Nome"))">
-                    class="form-control"
+                            asp-items="@(new SelectList(Model.Departamentos, "Id", "Nome"))"
+                    class="form-control">
+                    <option value="">Selecione...</option>
                     </select>
                 <span asp-validation-for="Vendedor.DepartamentoId" class="text-danger"></span>
             </div>
@@ -53,3 +55,12 @@
         </form>
     </div>
 </div>
+<div>
+    <a asp-action="Index">Voltar a lista</a>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

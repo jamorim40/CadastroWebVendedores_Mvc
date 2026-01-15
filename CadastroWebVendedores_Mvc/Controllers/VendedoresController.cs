@@ -24,17 +24,17 @@ namespace CadastroWebVendedores_Mvc.Controllers
         }
 
         //Ação Index para listar vendedores
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var listaVendedores = _servicoVendedor.FindAll(); // Chama o serviço para obter a lista de vendedores
+            var listaVendedores = await _servicoVendedor.FindAllAsync(); // Chama o serviço para obter a lista de vendedores
             return View(listaVendedores);// Retorna a view com a lista de vendedores
         }
 
         //Criar acao "Criar" (GET)
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
             // Chama o serviço para obter a lista de departamentos
-            var departamentos = _servicoDepartamento.FindAll();
+            var departamentos = await _servicoDepartamento.FindAllAsync();
             // Cria o formulario com a lista de departamentos e inicializa o vendedor requerido
             var formulario = new FormularioVendedor { Departamentos = departamentos };
 
@@ -42,27 +42,32 @@ namespace CadastroWebVendedores_Mvc.Controllers
         }
 
         //Criar ação "Criar" (POST)
-        [HttpPost]// Indica que esta ação responde a requisições POST
-        [ValidateAntiForgeryToken]// Protege contra ataques CSRF
-        public IActionResult Create(Vendedor vendedor)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(Vendedor vendedor)
         {
-            if (ModelState.IsValid)// Verifica se o modelo é válido
+            if (!ModelState.IsValid)
             {
-                _servicoVendedor.Insert(vendedor);// Chama o serviço para inserir o novo vendedor
-                return RedirectToAction(nameof(Index));// Redireciona para a ação Index após a criação
+                var departamentos = await _servicoDepartamento.FindAllAsync();
+                var formulario = new FormularioVendedor { Vendedor = vendedor, Departamentos = departamentos };
+
+                return View(formulario);
             }
-            return View(vendedor);
+
+            await _servicoVendedor.InsertAsync(vendedor);
+            return RedirectToAction(nameof(Index));
         }
 
+
         //Ação Delete (GET)
-        public IActionResult Delete(int? id)
+        public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
             {
                 return RedirectToAction(nameof(Error), new { message = "Id não existe" });// Retorna erro se o id for nulo
             }
 
-            var vendedor = _servicoVendedor.FindById(id.Value);
+            var vendedor = await _servicoVendedor.FindByIdAsync(id.Value);
             if (vendedor == null)
             {
                 return RedirectToAction(nameof(Error), new { message = "Id não encontrado" });// Retorna erro se o vendedor não for encontrado 
@@ -74,21 +79,21 @@ namespace CadastroWebVendedores_Mvc.Controllers
         //Ação Delete (POST)
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            _servicoVendedor.Remove(id);
+            await _servicoVendedor.RemoveAsync(id);
             return RedirectToAction(nameof(Index));
         }
 
         //Ação Details (GET)
-        public IActionResult Details(int? id)
+        public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
             {
                 return RedirectToAction(nameof(Error), new { message = "Id não existe" });
             }
 
-            var vendedor = _servicoVendedor.FindById(id.Value);
+            var vendedor = await _servicoVendedor.FindByIdAsync(id.Value);
             if (vendedor == null)
             {
                 return RedirectToAction(nameof(Error), new { message = "Id não encontrado" });
@@ -98,19 +103,19 @@ namespace CadastroWebVendedores_Mvc.Controllers
         }
 
         //Ação Edit (GET)
-        public IActionResult Edit(int? id)
+        public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
             {
                 return RedirectToAction(nameof(Error), new { message = "Id não existe" });
             }
-            var vendedor = _servicoVendedor.FindById(id.Value);
+            var vendedor = await _servicoVendedor.FindByIdAsync(id.Value);
             if (vendedor == null)
             {
                 return RedirectToAction(nameof(Error), new { message = "Id não encontrado" });
             }
             // Chama o serviço para obter a lista de departamentos
-            var departamentos = _servicoDepartamento.FindAll();
+            var departamentos = await _servicoDepartamento.FindAllAsync();
             // Cria o formulario com a lista de departamentos e inicializa o vendedor requerido
             var formulario = new FormularioVendedor { Vendedor = vendedor, Departamentos = departamentos };
             return View(formulario);
@@ -119,30 +124,32 @@ namespace CadastroWebVendedores_Mvc.Controllers
         //Ação Edit (POST)
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(int id, Vendedor vendedor)
+        public async Task<IActionResult>  Edit(int id, FormularioVendedor formulario)
         {
-            if (id != vendedor.Id)
+            if (id != formulario.Vendedor.Id)
             {
                 return RedirectToAction(nameof(Error), new { message = "Id não corresponde" });
             }
             if (ModelState.IsValid)
             {
-                try
-                {
-                    _servicoVendedor.Update(vendedor);
-                    return RedirectToAction(nameof(Index));
-                }
-                catch (KeyNotFoundException ex)
-                {
-                    return RedirectToAction(nameof(Error), new { message = ex.Message });
-                }
-                catch(DB_ExcecoesDeConcorrencia ex)
-                {
-                    return RedirectToAction(nameof(Error), new { message = ex.Message });
-                }
-               
+                formulario.Departamentos = await _servicoDepartamento.FindAllAsync();
+                return View(formulario);
             }
-            return View(vendedor);
+            try
+            {
+                await _servicoVendedor.UpdateAsync(formulario.Vendedor);
+                return RedirectToAction(nameof(Index));
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return RedirectToAction(nameof(Error), new { message = ex.Message });
+            }
+            catch (DB_ExcecoesDeConcorrencia ex)
+            {
+                return RedirectToAction(nameof(Error), new { message = ex.Message });
+            }
+
+        
         }
 
         //Ação Error
