@@ -20,5 +20,17 @@ namespace CadastroWebVendedores_Mvc.Data
         public DbSet<Vendedor> Vendedor { get; set; } = default!;
         public DbSet<RegistroDeVendas> RegistroDeVendas { get; set; } = default!;
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<RegistroDeVendas>()
+                .HasOne(rv => rv.Vendedor)
+                .WithMany(v => v.Vendas) // <-- nome certo da coleção
+                .HasForeignKey(rv => rv.VendedorId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            base.OnModelCreating(modelBuilder);
+        }
+
+
     }
 }

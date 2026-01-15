@@ -7,8 +7,11 @@ namespace CadastroWebVendedores_Mvc.Models
         //Propriedades da classe RegistroDeVendas
         public int Id { get; set; }
         public DateTime Data { get; set; }
-        public double ValorDeVenda { get; set; }
+        public decimal ValorDeVenda { get; set; }
         public StatusVendas Status { get; set; }
+
+        //FK explicita
+        public int VendedorId { get; set; }
 
         //Associação entre RegistroDeVendas e Vendedor (muitos para 1)
         public required Vendedor Vendedor { get; set; }
@@ -19,7 +22,7 @@ namespace CadastroWebVendedores_Mvc.Models
         }
 
         //Construtor com parâmetros
-        public RegistroDeVendas(int id, DateTime data, double valorDeVenda, StatusVendas status, Vendedor vendedor)
+        public RegistroDeVendas(int id, DateTime data, decimal valorDeVenda, StatusVendas status, Vendedor vendedor)
         {
             Id = id;
             Data = data;

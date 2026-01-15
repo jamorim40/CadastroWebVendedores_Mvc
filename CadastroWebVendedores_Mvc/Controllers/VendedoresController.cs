@@ -81,8 +81,15 @@ namespace CadastroWebVendedores_Mvc.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int id)
         {
-            await _servicoVendedor.RemoveAsync(id);
-            return RedirectToAction(nameof(Index));
+            try
+            {
+                await _servicoVendedor.RemoveAsync(id);
+                return RedirectToAction(nameof(Index));
+            }
+            catch (ExcecaoDeIntegridade ex)
+            {
+                return RedirectToAction(nameof(Error), new { message = "O vendedor não pode ser excluido - Vendas registradas" });
+            }
         }
 
         //Ação Details (GET)

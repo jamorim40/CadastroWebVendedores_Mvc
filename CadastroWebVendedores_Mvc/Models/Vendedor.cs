@@ -71,7 +71,7 @@ namespace CadastroWebVendedores_Mvc.Models
         //Método para calcular o total de vendas em um período específico
         public double TotalVendas(DateTime dataInicial, DateTime dataFinal)
         {
-            return Vendas //Vendas é a coleção de registros de vendas
+            return (double)Vendas //Vendas é a coleção de registros de vendas
                 .Where(rv => rv.Data >= dataInicial && rv.Data <= dataFinal)
                 .Sum(rv => rv.ValorDeVenda);
         }

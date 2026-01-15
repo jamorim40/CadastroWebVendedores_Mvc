@@ -4,6 +4,7 @@ using CadastroWebVendedores_Mvc.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CadastroWebVendedores_Mvc.Migrations
 {
     [DbContext(typeof(CadastroWebVendedores_MvcContext))]
-    partial class CadastroWebVendedores_MvcContextModelSnapshot : ModelSnapshot
+    [Migration("20260115180357_AjusteIntegridadeReferencialVendedorVendas")]
+    partial class AjusteIntegridadeReferencialVendedorVendas
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
